@@ -32,10 +32,6 @@ LOG_MODULE_REGISTER(oob_lte);
 #include "led_configuration.h"
 #include "qrtc.h"
 
-#if CONFIG_COAP_FOTA
-#include "coap_fota_shadow.h"
-#endif
-
 #include "lte.h"
 
 /******************************************************************************/
