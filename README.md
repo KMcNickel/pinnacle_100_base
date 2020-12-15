@@ -1,3 +1,5 @@
+# The following readme has not been modified... This is a base setup for the Pinnnacle 100 from Laird Connectivity to be used for other projects
+Althouh this is  a functional start point much more work needs to be done to clean up the files
 # Pinnacle 100 Out of Box Demo
 
 Download firmware releases from [here!](https://github.com/LairdCP/Pinnacle_100_oob_demo/releases)
