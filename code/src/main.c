@@ -203,6 +203,7 @@ static void appStateWaitForLte(void)
 	appSetNextState(appStateLteConnected);
 }
  // For an implementation set the above "appSetNextState" function call to the needed state.
+
 static void appStateLteConnected(void)
 {
 	k_sleep(K_SECONDS(1));
