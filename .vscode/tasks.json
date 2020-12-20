@@ -14,9 +14,9 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "${config:clear_static_partitions_unix} && west build -b pinnacle_100_dvk -d ${workspaceRoot}/build/oob_demo_aws ${workspaceRoot}/oob_demo",
+      "command": "${config:clear_static_partitions_unix} && west build -b pinnacle_100_dvk -d ${workspaceRoot}/build ${workspaceRoot}/code",
       "windows": {
-        "command": "${config:clear_static_partitions_windows} && west build -b pinnacle_100_dvk -d ${workspaceRoot}\\build\\oob_demo_aws ${workspaceRoot}\\oob_demo"
+        "command": "${config:clear_static_partitions_windows} && west build -b pinnacle_100_dvk -d ${workspaceRoot}\\build ${workspaceRoot}\\code"
       },
       "problemMatcher": {
         "base": "$gcc",
@@ -26,9 +26,9 @@
     {
       "label": "re-build",
       "type": "shell",
-      "command": "${config:clear_static_partitions_unix} && west build -p -b pinnacle_100_dvk -d ${workspaceRoot}/build/oob_demo_aws ${workspaceRoot}/oob_demo",
+      "command": "${config:clear_static_partitions_unix} && west build -p -b pinnacle_100_dvk -d ${workspaceRoot}/build ${workspaceRoot}/code",
       "windows": {
-        "command": "${config:clear_static_partitions_windows} && west build -p -b pinnacle_100_dvk -d ${workspaceRoot}\\build\\oob_demo_aws ${workspaceRoot}\\oob_demo"
+        "command": "${config:clear_static_partitions_windows} && west build -p -b pinnacle_100_dvk -d ${workspaceRoot}\\build ${workspaceRoot}\\code"
       },
       "problemMatcher": {
         "base": "$gcc",
@@ -38,87 +38,63 @@
     {
       "label": "flash app",
       "type": "shell",
-      "command": "west flash -d ${workspaceRoot}/build/${input:app}",
+      "command": "west flash -d ${workspaceRoot}/build/",
       "windows": {
-        "command": "west flash -d ${workspaceRoot}\\build\\${input:app}"
+        "command": "west flash -d ${workspaceRoot}\\build\\"
       },
       "problemMatcher": []
     },
     {
       "label": "clean app",
       "type": "shell",
-      "command": "west build -t clean -d ${workspaceRoot}/build/${input:app}",
+      "command": "west build -t clean -d ${workspaceRoot}/build/",
       "windows": {
-        "command": "west build -t clean -d ${workspaceRoot}\\build\\${input:app}"
+        "command": "west build -t clean -d ${workspaceRoot}\\build\\"
       },
       "problemMatcher": []
     },
     {
       "label": "pristine app",
       "type": "shell",
-      "command": "west build -t pristine -d ${workspaceRoot}/build/${input:app}",
+      "command": "west build -t pristine -d ${workspaceRoot}/build/",
       "windows": {
-        "command": "west build -t pristine -d ${workspaceRoot}\\build\\${input:app}"
+        "command": "west build -t pristine -d ${workspaceRoot}\\build\\"
       },
       "problemMatcher": []
     },
     {
       "label": "menuconfig",
       "type": "shell",
-      "command": "west build -t menuconfig -d ${workspaceRoot}/build/${input:app} ${workspaceRoot}/oob_demo",
+      "command": "west build -t menuconfig -d ${workspaceRoot}/build/ ${workspaceRoot}/code",
       "windows": {
-        "command": "west build -t menuconfig -d ${workspaceRoot}\\build\\${input:app} ${workspaceRoot}\\oob_demo"
+        "command": "west build -t menuconfig -d ${workspaceRoot}\\build\\ ${workspaceRoot}\\code"
       },
       "problemMatcher": []
     },
     {
-      "label": "build lwm2m",
-      "type": "shell",
-      "command": "${config:clear_static_partitions_unix} && west build -b pinnacle_100_dvk -d ${workspaceRoot}/build/oob_demo_lwm2m ${workspaceRoot}/oob_demo -- -DOVERLAY_CONFIG=\"${config:app_lwm2m_config_unix}\"",
-      "windows": {
-        "command": "${config:clear_static_partitions_windows} && west build -b pinnacle_100_dvk -d ${workspaceRoot}\\build\\oob_demo_lwm2m ${workspaceRoot}\\oob_demo -- -DOVERLAY_CONFIG=\"${config:app_lwm2m_config_windows}\""
-      },
-      "problemMatcher": {
-        "base": "$gcc",
-        "fileLocation": "absolute"
-      }
-    },
-    {
       "label": "app ram_report",
       "type": "shell",
-      "command": "west build -d ${workspaceRoot}/build/${input:app} ${workspaceRoot}/oob_demo --target ram_report > ${workspaceRoot}/build/${input:app}/ram_report",
+      "command": "west build -d ${workspaceRoot}/build/ ${workspaceRoot}/code --target ram_report > ${workspaceRoot}/build/ram_report",
       "windows": {
-        "command": "west build -d ${workspaceRoot}\\build\\${input:app} ${workspaceRoot}\\oob_demo --target ram_report > ${workspaceRoot}\\build\\${input:app}\\ram_report"
+        "command": "west build -d ${workspaceRoot}\\build\\ ${workspaceRoot}\\code --target ram_report > ${workspaceRoot}\\build\\\\ram_report"
       },
       "problemMatcher": []
     },
     {
       "label": "app rom_report",
       "type": "shell",
-      "command": "west build -d ${workspaceRoot}/build/${input:app} ${workspaceRoot}/oob_demo --target rom_report > ${workspaceRoot}/build/${input:app}/rom_report",
+      "command": "west build -d ${workspaceRoot}/build/ ${workspaceRoot}/code --target rom_report > ${workspaceRoot}/build/rom_report",
       "windows": {
-        "command": "west build -d ${workspaceRoot}\\build\\${input:app} ${workspaceRoot}\\oob_demo --target rom_report > ${workspaceRoot}\\build\\${input:app}\\rom_report"
+        "command": "west build -d ${workspaceRoot}\\build\\ ${workspaceRoot}\\code --target rom_report > ${workspaceRoot}\\build\\\\rom_report"
       },
       "problemMatcher": []
     },
     {
       "label": "build with mcuboot",
       "type": "shell",
-      "command": "${config:setup_static_partitions_unix} && west build -b pinnacle_100_dvk -d ${workspaceRoot}/build/oob_demo_aws ${workspaceRoot}/oob_demo -- -DOVERLAY_CONFIG=\"${config:app_mcuboot_config_unix}\" -Dmcuboot_CONF_FILE=\"${config:mcuboot_config_unix}\" '-DCONFIG_MCUBOOT_IMAGE_VERSION=\"${input:app_ver}\"'",
+      "command": "${config:setup_static_partitions_unix} && west build -b pinnacle_100_dvk -d ${workspaceRoot}/build ${workspaceRoot}/code -- -DOVERLAY_CONFIG=\"${config:app_mcuboot_config_unix}\" -Dmcuboot_CONF_FILE=\"${config:mcuboot_config_unix}\" '-DCONFIG_MCUBOOT_IMAGE_VERSION=\"${input:app_ver}\"'",
       "windows": {
-        "command": "${config:setup_static_partitions_windows} && west build -b pinnacle_100_dvk -d ${workspaceRoot}\\build\\oob_demo_aws ${workspaceRoot}\\oob_demo -- -DOVERLAY_CONFIG=\"${config:app_mcuboot_config_windows}\" -Dmcuboot_CONF_FILE=\"${config:mcuboot_config_windows}\""
-      },
-      "problemMatcher": {
-        "base": "$gcc",
-        "fileLocation": "absolute"
-      }
-    },
-    {
-      "label": "build lwm2m with mcuboot",
-      "type": "shell",
-      "command": "${config:setup_static_partitions_unix} && west build -b pinnacle_100_dvk -d ${workspaceRoot}/build/oob_demo_lwm2m ${workspaceRoot}/oob_demo -- -DOVERLAY_CONFIG=\"${config:app_lwm2m_config_unix} ${config:app_mcuboot_config_unix}\" -Dmcuboot_CONF_FILE=\"${config:mcuboot_config_unix}\" '-DCONFIG_MCUBOOT_IMAGE_VERSION=\"${input:app_ver}\"'",
-      "windows": {
-        "command": "${config:setup_static_partitions_windows} && west build -b pinnacle_100_dvk -d ${workspaceRoot}\\build\\oob_demo_lwm2m ${workspaceRoot}\\oob_demo -- -DOVERLAY_CONFIG=\"${config:app_lwm2m_config_windows} ${config:app_mcuboot_config_windows}\" -Dmcuboot_CONF_FILE=\"${config:mcuboot_config_windows}\""
+        "command": "${config:setup_static_partitions_windows} && west build -b pinnacle_100_dvk -d ${workspaceRoot}\\build ${workspaceRoot}\\code -- -DOVERLAY_CONFIG=\"${config:app_mcuboot_config_windows}\" -Dmcuboot_CONF_FILE=\"${config:mcuboot_config_windows}\""
       },
       "problemMatcher": {
         "base": "$gcc",
@@ -154,16 +130,16 @@
       "problemMatcher": []
     },
     {
-      "label": "lwm2m - build flash",
+      "label": " - build flash",
       "type": "shell",
       "dependsOrder": "sequence",
-      "dependsOn": ["build lwm2m with mcuboot", "flash app"],
+      "dependsOn": ["build  with mcuboot", "flash app"],
       "problemMatcher": []
     },
     {
       "label": "mcumgr upload signed app",
       "type": "shell",
-      "command": "sudo mcumgr -t 20 -r 2 ${input:mcumgr_cnx} image upload ${workspaceRoot}/build/${input:app}/zephyr/zephyr.signed.bin",
+      "command": "sudo mcumgr -t 20 -r 2 ${input:mcumgr_cnx} image upload ${workspaceRoot}/build/zephyr/zephyr.signed.bin",
       "problemMatcher": []
     },
     {
@@ -204,13 +180,6 @@
     }
   ],
   "inputs": [
-    {
-      "id": "app",
-      "description": "Select an app",
-      "default": "oob_demo_aws",
-      "type": "pickString",
-      "options": ["oob_demo_aws", "oob_demo_lwm2m"]
-    },
     {
       "id": "mcumgr_cnx",
       "description": "mcumgr connection params",

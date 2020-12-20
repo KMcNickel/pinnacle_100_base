@@ -9,7 +9,7 @@
 
 #include <logging/log.h>
 #define LOG_LEVEL LOG_LEVEL_DBG
-LOG_MODULE_REGISTER(oob_lte);
+LOG_MODULE_REGISTER(app_lte);
 
 #define LTE_LOG_ERR(...) LOG_ERR(__VA_ARGS__)
 #define LTE_LOG_WRN(...) LOG_WRN(__VA_ARGS__)

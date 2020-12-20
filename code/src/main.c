@@ -32,7 +32,6 @@ LOG_MODULE_REGISTER(main);
 #include "lte.h"
 #include "laird_power.h"
 #include "dis.h"
-#include "aws.h"
 #include "FrameworkIncludes.h"
 #include "laird_utility_macros.h"
 #include "string_util.h"
@@ -69,7 +68,6 @@ extern struct mdm_hl7800_apn *lte_apn_config;
 /******************************************************************************/
 K_SEM_DEFINE(lte_ready_sem, 0, 1);
 
-static FwkMsgReceiver_t cloudMsgReceiver;
 static bool appReady = false;
 
 static app_state_function_t appState;
@@ -78,12 +76,9 @@ struct lte_status *lteInfo;
 K_MSGQ_DEFINE(cloudQ, FWK_QUEUE_ENTRY_SIZE, CONFIG_CLOUD_QUEUE_SIZE,
 	      FWK_QUEUE_ALIGNMENT);
 
-static struct k_timer fifo_timer;
-
 /******************************************************************************/
 /* Local Function Prototypes                                                  */
 /******************************************************************************/
-static void initializeCloudMsgReceiver(void);
 static void appStateWaitForLte(void);
 static void appStateStartup(void);
 static void appStateLteConnected(void);
@@ -96,8 +91,6 @@ static void softwareReset(uint32_t DelayMs);
 
 static void configure_leds(void);
 
-static void cloud_fifo_monitor_isr(struct k_timer *timer_id);
-
 /******************************************************************************/
 /* Global Function Definitions                                                */
 /******************************************************************************/
@@ -105,7 +98,7 @@ void main(void)
 {
 	int rc;
 
-	printk("\nCar MQTT v%s\n", APP_VERSION_STRING);
+	printk("\nPinnacle 100 App v%s\n", APP_VERSION_STRING);
 
 	configure_leds();
 
@@ -119,18 +112,11 @@ void main(void)
 	}
 	lteInfo = lteGetStatus();
 
-	initializeCloudMsgReceiver();
-
 	dis_initialize(APP_VERSION_STRING);
 
 #ifdef CONFIG_MCUMGR
 	mcumgr_wrapper_register_subsystems();
 #endif
-
-	k_timer_init(&fifo_timer, cloud_fifo_monitor_isr, NULL);
-	k_timer_start(&fifo_timer,
-		      K_SECONDS(CONFIG_CLOUD_FIFO_CHECK_RATE_SECONDS),
-		      K_SECONDS(CONFIG_CLOUD_FIFO_CHECK_RATE_SECONDS));
 
 	appReady = true;
 	printk("\n!!!!!!!! App is ready! !!!!!!!!\n");
@@ -173,15 +159,6 @@ EXTERNED void Framework_AssertionHandler(char *file, int line)
 /******************************************************************************/
 /* Local Function Definitions                                                 */
 /******************************************************************************/
-
-static void initializeCloudMsgReceiver(void)
-{
-	cloudMsgReceiver.id = FWK_ID_CLOUD;
-	cloudMsgReceiver.pQueue = &cloudQ;
-	cloudMsgReceiver.rxBlockTicks = K_NO_WAIT; /* unused */
-	cloudMsgReceiver.pMsgDispatcher = NULL; /* unused */
-	Framework_RegisterReceiver(&cloudMsgReceiver);
-}
 
 static void lteEvent(enum lte_event event)
 {
@@ -254,18 +231,3 @@ static void configure_leds(void)
 /******************************************************************************/
 /* Interrupt Service Routines                                                 */
 /******************************************************************************/
-/* The cloud (MQTT) queue isn't checked in all states.  Therefore, it needs to
- * be periodically checked so that other tasks don't overfill it
- */
-static void cloud_fifo_monitor_isr(struct k_timer *timer_id)
-{
-	ARG_UNUSED(timer_id);
-
-	uint32_t numUsed = k_msgq_num_used_get(cloudMsgReceiver.pQueue);
-	if (numUsed > CONFIG_CLOUD_PURGE_THRESHOLD) {
-		size_t flushed = Framework_Flush(FWK_ID_CLOUD);
-		if (flushed > 0) {
-			LOG_WRN("Flushed %u cloud messages", flushed);
-		}
-	}
-}
